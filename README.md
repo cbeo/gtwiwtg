@@ -101,9 +101,9 @@ example apears at the end of the document, following the tutorial.
 
 > (defun descramble (n str)
     (concatenate 'string
-        (collect 
-           (apply #'intersperse!
-                  (mapcar #'seq (chunk n str))))))
+                 (collect 
+                    (apply #'intersperse!
+                           (mapcar #'seq (chunk n str))))))
 
 
 > (scramble 3 "this will be scrabled, ya dig?")
