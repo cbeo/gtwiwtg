@@ -409,7 +409,7 @@ Error Condition:
        (stop gen)))))
 
 
-(defun inflate! (fn gen &key extra-cleaup)
+(defun inflate! (fn gen &key extra-cleanup)
   "FN is expected to be a function that accepts elements of GEN and
 returns a new generator.  
 
