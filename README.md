@@ -283,6 +283,11 @@ Here are some simple examples of their use:
 - `(skip! n gen)` produces a generator by skipping the first `n` values in `gen`
 - `(skip-while! pred gen)` produces a generator by skippng elements of `gen` while `pred` is `t`
 - `(merge! comp gen1 gen2 &rest gens)` emulates the behavior of `merge` but for generators
+- `(truncate! n gen)` produces at most `n` of the values produced by `gen`
+- `(inject! fn gen)` shorthand for `(map! (lambda (x) (funcall fn x) x) gen)`
+- `(intersperse! gen1 gen2 &rest gens)` returns a generator that
+  intermingles the values of its argument generators, in the order
+  they appear in the argument list.
 
 And some experimental tools:
 
@@ -291,8 +296,12 @@ And some experimental tools:
 - `(partition! pred gen)` returns a list of two new generators, the
   first generating the memebers of `gen` that pass the predicate
   `pred`, and the second generating those that don't.
-  
-Both of the above are marked as EXPERIMENTAL because they may not be
+- `(disperse! n gen)` is sort of the opposite of
+  `intersperse!`. Returns a list of `n` generators, the first produces
+  every nth value from `gen`, the second produces every nth+1 values
+  from `gen`, and so on.
+ 
+The above are marked as EXPERIMENTAL because they may not be
 in line with the the spirit of this library. I wanted the library to
 produce constant-memory operations. However, when you consume the
 generators that the above forms produce, then new memory will be
