@@ -347,10 +347,6 @@ behavior is not allowed.
 An ongoing goal is to make those errors nicer to look at so that you
 can more easily pin-point where you goofed.
 
-[Aside: This was done for efficiency reasons, and I might make a
-"purely functional" parallel universe for these generators in the
-future.]
-
 ### The Fundamental Consumer
 
 Finally! Once you have built up your generators using *constructors*
