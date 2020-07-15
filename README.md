@@ -236,14 +236,14 @@ Here are some simple examples of their use:
 (0 2 4 6 8)
 
 ;; generate (times N) for each N in the range 1 to 4
-> (collect (inflate! #'times (range :from 1 :to 4 :inclusive t)))
-(0 0 1 0 1 2 0 1 2 3)
+> (for x (inflate! #'times (range :from 1 :to 4 :inclusive t))
+    (when (zerop x) (terpri))
+    (princ x) (princ #\Space))
 
-;; In the above example, you can see that 
-;; first 0 is generated     (times 1)
-;; then 0 1                 (times 2)
-;; then 0 1 2               (times 3)
-;; and finally 0 1 2 3      (times 4)
+0         ; (times 1)
+0 1       ; (times 2)
+0 1 2     ; (times 3)
+0 1 2 3   ; (times 4)
 
 ```
 
