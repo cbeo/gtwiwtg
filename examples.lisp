@@ -122,7 +122,7 @@ vector VEC, one at a time."
 ;;; Silly Scrambler ;;; 
 
 
-(defun pad (str len &optional (pad-char #\Space]))
+(defun pad (str len &optional (pad-char #\Space))
   (let ((i 0))
     (with-output-to-string (out)
       (loop :for c :across str :do (incf i) (princ c out))

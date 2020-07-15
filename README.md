@@ -87,6 +87,36 @@ example apears at the end of the document, following the tutorial.
 
 ```
 
+### A Silly Scrambler
+
+``` lisp 
+
+;; see examples.lisp for defuns of PAD and CHUNK
+
+> (defun scramble (n str)
+    (assert (< n (length str)))
+    (let ((str (pad str (* n (ceiling (/ (length str) n))))))
+      (concatenate 'string 
+                   (apply #'nconc
+                          (mapcar #'collect
+                                  (disperse! n (seq str)))))))
+
+> (defun descramble (n str)
+    (concatenate 'string
+        (collect 
+           (apply #'intersperse!
+                  (mapcar #'seq (chunk n str))))))
+
+
+> (scramble 3 "this will be scrabled, ya dig?")
+
+"tsi  rbdyd?h lbsal,ai iwlecme  g "
+
+> (descramble 3 *)
+"this will be scrambled, ya dig?  " 
+
+```
+
 ## Tutorial
 
 GTWIWTG is a tiny library for creating and using generators. 
