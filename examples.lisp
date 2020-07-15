@@ -131,10 +131,9 @@ vector VEC, one at a time."
 (defun scramble (n str)
   (assert (< n (length str)))
   (let ((str (pad str (* n (ceiling (/ (length str) n))))))
-    (concatenate 'string 
-                 (apply #'nconc
-                        (mapcar #'collect
-                                (disperse! n (seq str)))))))
+    (apply #'concatenate 'string 
+           (mapcar #'collect (disperse! n (seq str))))))
+
 
 (defun chunk (n str)
   (assert (zerop (mod (length str) n)))

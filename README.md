@@ -96,10 +96,8 @@ example apears at the end of the document, following the tutorial.
 > (defun scramble (n str)
     (assert (< n (length str)))
     (let ((str (pad str (* n (ceiling (/ (length str) n))))))
-      (concatenate 'string 
-                   (apply #'nconc
-                          (mapcar #'collect
-                                  (disperse! n (seq str)))))))
+      (apply #'concatenate 'string 
+             (mapcar #'collect (disperse! n (seq str))))))
 
 > (defun descramble (n str)
     (concatenate 'string
