@@ -564,10 +564,16 @@ Caveat:
  - If the generator is infinite, then skip-while! MIGHT never return.
 "
   (sully-when-clean (list gen))
-  (loop :while (and (has-next-p gen)
-                    (funcall pred (next gen))))
-  (setf (dirty-p gen) nil)
-  gen)
+  (let ((cached (list nil)))
+    (loop
+       :while (has-next-p gen)
+       :for val = (next gen) 
+       :unless (funcall pred val)
+       :do
+         (setf (car cached) val)
+         (return))
+    (setf (dirty-p gen) nil)
+    (concat! (seq cached) gen)))
 
 
 (defun nfurcate! (count source-generator)
