@@ -727,7 +727,9 @@ Example:
   (map! (lambda (x) (funcall fn x) x) gen))
 
 (defun disperse! (n gen)
-  "Produces a list of N gnerators, G1,...,GN.
+  "EXPERIMENTAL. MAY BE REMOVED.
+
+Produces a list of N gnerators, G1,...,GN.
 
 G1 produces every Nth value of GEN, including first value.
 G2 produces every Nth+1 value of GEN, including the second value.

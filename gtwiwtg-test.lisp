@@ -40,6 +40,89 @@
    (size (from-input-stream s (lambda (s) (read-line s nil nil))))
    (ok (not (open-stream-p s))))
 
+ (let* ((file  (asdf:system-source-file "gtwiwtg-test"))
+        (stat (osicat-posix:stat file)))
+   (is (osicat-posix:stat-size stat)
+       (1-  (size (file-bytes file))))) ;; b/c NIL is returned as the last generated value
+
+ (let* ((file  (asdf:system-source-file "gtwiwtg-test"))
+        (stat (osicat-posix:stat file)))
+   (is (osicat-posix:stat-size stat)
+       (1-  (size (file-chars file)))))
+
+ (is (list 10 20 30 40)
+     (take 4  (map! (lambda (x) (* x 10))
+                    (range :from 1))))
+
+ (is (list 20 40 60 80 100)
+     (take 5 (map! (lambda (x) (* 10 x))
+                   (filter! #'evenp (range :from 1)))))
+
+ (is (list 0 1 2 3 #\a #\b #\c -10 -20 -30)
+     (take 10 (concat! (times 4)
+                       (seq "abc")
+                       (range :from -10 :by -10))))
+
+ (is '(("one" 1 :one) ("two" 2 :two) ("three" 3 :three))
+     (collect (zip! (seq '("one" "two" "three"))
+                    (range :from 1)
+                    (repeater :one :two :three))))
+
+(is '(-200 -180 -160 -140 -120 -100 -80 -60 -40 -20 -20 -15 -10 -5 0 0 1 2 3 4 5 6 7
+      8 9 20 40 60 80 100 120 140 160 180 200)
+    (collect
+        (merge! #'< 
+                (range :from -200 :by 20 :to 200 :inclusive t) 
+                (times 10)
+                (range :from -20 :by 5 :to 0))))
+
+
+(is (collect
+        (merge! #'< 
+                (times 3)
+                (range :from -200 :by 50 :to 200 :inclusive t) 
+                (range :from 0 :by -5 :to -20 :inclusive t)))
+    '(-200 -150 -100 -50 -20 -15 -10 -5 0 0 0 1 2 50 100 150 200))
+
+;; don't be fooled by the last example. Merge is only guaranteed to
+;; produce sorted outputs if the inputs are all sorted the same way.
+;; here is an example showing that the end result isn't always sorted
+;; if the arguments are sorted in different ways:
+
+(is (collect
+        (merge! #'< 
+                (times 3)
+                (range :from 200 :by -50 :to -200 :inclusive t) 
+                (range :from 0 :by -5 :to -20 :inclusive t)))
+    '(0 -5 -10 -15 -20 -50 -100 -150 -200 0 0 1 2 50 100 150 200))
+
+(is (concatenate 'string (collect (skip! 5 (seq "hellodude"))))
+    "dude")
+
+(is (take 4 (skip! 10 (range)))
+    '(10 11 12 13))
+
+(is (collect (skip-while! #'evenp (seq '(0 2 4 6 9 2 4 6 7 11))))
+    '(9 2 4 6 7 11))
+
+(destructuring-bind (a b c d) (nfurcate! 4 (seq "hello"))
+  (is (concatenate 'string
+                   (collect a)
+                   (collect b)
+                   (collect c)
+                   (collect d))
+      "hellohellohellohello"))
+
+(destructuring-bind (a b c d) (nfurcate! 4 (seq "hello"))
+  (is (concatenate 'string
+                   (collect (intersperse! a b c d)))
+      "hhhheeeelllllllloooo"))
+
+(destructuring-bind (a b c d) (disperse! 4 (seq "hhhheeeelllllllloooo"))
+  (is (concatenate 'string
+                   (collect (concat! a b c d)))
+      "hellohellohellohello"))
+
  )
 
 
