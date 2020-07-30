@@ -749,6 +749,15 @@ This is sort of the opposite of INTERSPERSE!."
 
 ;;; CONSUMERS
 
+(defmacro with-generator ((var gen) &body body)
+  "Use this if you absolutely must manually call NEXT and
+HAS-NEXT-P. It will ensure that the generator bound to VAR will be
+stopped and cleaned up properly."
+  `(let ((,var ,gen))
+     (assert (typep ,var 'gtwiwtg::generator!))
+     (unwind-protect (progn ,@body)
+       (stop ,var))))
+
 (defmacro for (var-exp gen &body body)
   "The basic generator consumer.
 

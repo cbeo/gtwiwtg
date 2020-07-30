@@ -30,6 +30,7 @@
            #:truncate!
            #:inject!
            #:disperse!
+           #:with-generator
            #:for
            #:fold
            #:collect
