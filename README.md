@@ -574,6 +574,7 @@ the `gtwiwtg.anaphora` package.  Here's an example:
 ```
 
 
+
 ### Making New Generators 
 
 Generators are subclasses of `gtwiwtg::generator!` that have at least
@@ -625,6 +626,30 @@ You can see that `next` ASSUMES that there is a next value. This is
 one of the reasons you are not ment to call `next` manually.  The
 `for` consumer automatically checks that there is a next value before
 trying to get it.
+
+
+### The Naughty Consumer 
+
+Now that the mysteries that make generators go has been explained in
+the previous section, you may be tempted to manually call `next` and
+`has-next-p` on your generators. If you must do this, you should use
+the `with-generator` macro:
+
+```lisp 
+
+> (with-generator (gen (seq "a1b2c3"))
+     (when (gtwiwtg::has-next-p gen)
+       (princ (gtwiwtg::next gen))
+       (terpri)))
+a
+
+```
+
+The `with-generator` form will ensure that the generator is properly
+closed. Could be useful with generators backed by input streams that
+need a custom logic that is hard to build using the basic tools. I'm
+not sure if you ever *will* need it, but the library provides it just
+in case.
 
 ## The Permutations Example
 
