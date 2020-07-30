@@ -42,3 +42,10 @@
            #:average
            #:argmax
            #:argmin))
+
+(defpackage #:gtwiwtg.anaphora
+  (:use #:cl)
+  (:import-from #:gtwiwtg
+                #:for
+                #:fold)
+  (:export #:afor #:afold #:it #:acc))

@@ -1,4 +1,3 @@
-(defpackage #:gtwiwtg (:use #:cl))
 (in-package :gtwiwtg)
 
 ;;; Generator Protocol ;;;
