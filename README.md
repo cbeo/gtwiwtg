@@ -540,7 +540,7 @@ The `pick-out` consumer is interesting enough to see a quick example of:
 (#\r #\e #\e #\r #\n)
 ```
 
-### Anaphoric Cosumer Macros 
+### Anaphoric Consumer Macros 
 
 If you would like to use `for` and `fold` macros with a little less
 visual noise (but sacrificing some of their flexibility), you can use
