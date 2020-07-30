@@ -540,6 +540,40 @@ The `pick-out` consumer is interesting enough to see a quick example of:
 (#\r #\e #\e #\r #\n)
 ```
 
+### Anaphoric Cosumer Macros 
+
+If you would like to use `for` and `fold` macros with a little less
+visual noise (but sacrificing some of their flexibility), you can use
+the `gtwiwtg.anaphora` package.  Here's an example:
+
+``` lisp
+
+> (use-package :gtwiwtg)          ;; gets you the core package
+> (use-package :gtwiwtg.anaphora) ;; gets you the two extra anaphoric consumers
+
+;; ordinary for
+> (for x (times 3) (print x))
+
+0 
+1 
+2 
+
+;; anaphoric for
+> (afor (times 3) (print it))    ;; the variable IT is provided by AFOR
+0
+1
+2
+
+;; ordinary fold
+> (fold (sum 0) (x (times 10)) (+ sum x))
+45
+
+;; anaphoric fold
+> (afold 0 (times 10) (+ acc it))  ;; variables IT and ACC are provided by AFOLD
+45 
+```
+
+
 ### Making New Generators 
 
 Generators are subclasses of `gtwiwtg::generator!` that have at least
