@@ -87,34 +87,6 @@ example apears at the end of the document, following the tutorial.
 
 ```
 
-### A Silly Scrambler
-
-``` lisp 
-
-;; see examples.lisp for defuns of PAD and CHUNK
-
-> (defun scramble (n str)
-    (assert (< n (length str)))
-    (let ((str (pad str (* n (ceiling (/ (length str) n))))))
-      (apply #'concatenate 'string 
-             (mapcar #'collect (disperse! n (seq str))))))
-
-> (defun descramble (n str)
-    (concatenate 'string
-                 (collect 
-                    (apply #'intersperse!
-                           (mapcar #'seq (chunk n str))))))
-
-
-> (scramble 3 "this will be scrambled, ya dig?")
-
-"tsi  rbdyd?h lbsal,ai iwlecme  g "
-
-> (descramble 3 *)
-"this will be scrambled, ya dig?  " 
-
-```
-
 ## Tutorial
 
 GTWIWTG is a tiny library for creating and using generators. 
@@ -289,23 +261,6 @@ Here are some simple examples of their use:
   intermingles the values of its argument generators, in the order
   they appear in the argument list.
 
-And some experimental tools:
-
-- `(nfurcate! n gen)` returns a list of `n` new generators, each
-  producing the same elements as of `gen`.
-- `(partition! pred gen)` returns a list of two new generators, the
-  first generating the memebers of `gen` that pass the predicate
-  `pred`, and the second generating those that don't.
-- `(disperse! n gen)` is sort of the opposite of
-  `intersperse!`. Returns a list of `n` generators, the first produces
-  every nth value from `gen`, the second produces every nth+1 values
-  from `gen`, and so on.
- 
-The above are marked as EXPERIMENTAL because they may not be
-in line with the the spirit of this library. I wanted the library to
-produce constant-memory operations. However, when you consume the
-generators that the above forms produce, then new memory will be
-consed during consumption. See the docstrings for both forms for more details.
 
 ### A Word Of Warning!
 

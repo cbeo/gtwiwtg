@@ -474,12 +474,12 @@ Error Conditions:
  - If any of the generators compare EQL, an error will be signalled.
  - If any of the generators has been used elsewhere, an error will be sigalled.
 "
-  (sully-when-clean (list* gen gens))
-  (inflate! #'identity (seq (list* gen gens))
+  (sully-when-clean (cons gen gens))
+  (inflate! #'identity (seq (cons gen gens))
             ;; in the case that not all arguments are consumed,
             ;; explicitly stop each one at clean-up time.
             :extra-cleanup (lambda () 
-                             (dolist (g (list* gen gens)) (stop g)))))
+                             (dolist (g (cons gen gens)) (stop g)))))
 
 (defun zip! (gen &rest gens)
   "Is a shortcut for (MAP! #'LIST GEN1 GEN2 ...)"
@@ -535,126 +535,6 @@ Error Conditions:
      (lambda ()
        (dolist (g all-gens) (stop g))))))
 
-
-(defun skip! (n gen)
-  "EXPERIMENTAL. Might be removed.
-
-Returns the generator GEN but without the first N elements. 
-
-Caveats:
-
- - It is possible that SKIP! will skip the whole source generator,
-   returning an empty gernator.
-"
-  (sully-when-clean (list gen))
-  (dotimes (x n) (when (has-next-p gen) (next gen)))
-  (setf (dirty-p gen ) nil)
-  gen)
-
-(defun skip-while! (pred gen)
-  "EXPERIMENTAL. Might be removed.
-
-Returns the generator GEN but without the first N elements for
-which PRED is non-nil. 
-
-Caveat:
- - It is possible that, for finite generators, skip-while! will skip
-   the whole generated sequence. 
- - If the generator is infinite, then skip-while! MIGHT never return.
-"
-  (sully-when-clean (list gen))
-  (let ((cached (list nil)))
-    (loop
-       :while (has-next-p gen)
-       :for val = (next gen) 
-       :unless (funcall pred val)
-       :do
-         (setf (car cached) val)
-         (return))
-    (setf (dirty-p gen) nil)
-    (concat! (seq cached) gen)))
-
-
-(defun nfurcate! (count source-generator)
-  "EXERIMENTAL. MAY BE REMOVED
-
-Return a list of COUNT copies of GEN.
-
-Caveat: 
-
- - The generators produced by NFURCATE! allocate new memory as they
-   are consumed. This allocation can be O(COUNT * SIZE) in space
-   complexity, where SIZE is the size of GEN. Hence, use with caution
-   on infinite generators.  
-
- - The SOURCE-GENERATOR will be cleaned up only after all of the
-   returned generators have been consumed. That is if you make some
-   generators using NFURCATE! but do use them, then the
-   SOURCE-GENERATOR may never be cleaned up. I.e. if it is backed by a
-   stream, that stream will not be closed.
-
-"
-  (sully-when-clean (list source-generator))
-  (let ((qs (loop :for _ :below count :collect (make-queue)))
-        (stop-cells (loop :for _ :below count :collect (list nil))))
-    (loop
-       :for build-q :in qs
-       :for stop-cell :in stop-cells  
-       :collect
-         (let ((local-q build-q)
-               (local-stop stop-cell))
-
-           (from-thunk-until
-            (lambda ()
-              (cond ((not (queue-empty-p local-q))
-                     (dequeue local-q))
-
-                    ((has-next-p source-generator)
-                     (let ((next-v (next source-generator)))
-                       (loop :for q :in qs :do (enqueue next-v q))
-                       (dequeue local-q)))
-
-                    (t (error "Attempted to get next from a spent generator."))))
-
-            :until
-            (lambda ()
-              (and (not (has-next-p source-generator))
-                   (queue-empty-p local-q)))
-
-            :clean-up
-            (lambda ()
-              (setf (car local-stop) t)
-              (when (every #'car stop-cells)
-                (stop source-generator))))))))
-
-(defun partition! (pred gen)
-  "EXPERIMENTAL. MAY BE REMOVED. 
-
-Return a list of two generators that looks like (PASSING FAILING)
-
-PASSING is a generator that produces the values of GEN that pass the
-predicate PRED 
-
-FAILING is a generator that produces the values of GEN that do not
-pass the predicate PRED
-
-Caveat: 
-
- - The generators produced by PARTITION! allocate new memory as you
-   consume them. This allocation may be O(2 * SIZE) in space
-   complexity, where SIZE is the size of GEN. Hence, use with caution
-   on infinite generators.
-
-- The generator GEN will be cleaned up only after both returned
-  generators have been. Hence, you must consume both or you risk
-  leaving some clean up undone. E.g. If GEN is a stream backed
-  generator, the stream will not be closed until both PASSING and
-  FAILING have been consumed.
-
-"
-  (destructuring-bind (gen1 gen2) (nfurcate! 2 gen)
-    (list (filter! pred gen1)
-          (filter! (complement pred) gen2))))
 
 (defun intersperse! (gen1 gen2 &rest gens)
   "Produces a generator that intersperses one value from each of its
@@ -725,25 +605,6 @@ Example:
 "
   (map! (lambda (x) (funcall fn x) x) gen))
 
-(defun disperse! (n gen)
-  "EXPERIMENTAL. MAY BE REMOVED.
-
-Produces a list of N gnerators, G1,...,GN.
-
-G1 produces every Nth value of GEN, including first value.
-G2 produces every Nth+1 value of GEN, including the second value.
-...
-GN produces every Nth + (N-1) value of GEN, including the (N-1)th value.
-
-This is sort of the opposite of INTERSPERSE!."
-  (loop
-     :for i :below n
-     :for cloned :in (nfurcate! n gen)
-     :collect
-       (let ((j i))
-         (map! #'second
-               (filter! (lambda (pair) (= j (mod (first pair) n)))
-                        (indexed! cloned))))))
 
 
 ;;; CONSUMERS

@@ -119,31 +119,3 @@ vector VEC, one at a time."
 
 
 
-;;; Silly Scrambler ;;; 
-
-
-(defun pad (str len &optional (pad-char #\Space))
-  (let ((i 0))
-    (with-output-to-string (out)
-      (loop :for c :across str :do (incf i) (princ c out))
-      (loop :while (< i len) :do (incf i) (princ pad-char out)))))
-
-(defun scramble (n str)
-  (assert (< n (length str)))
-  (let ((str (pad str (* n (ceiling (/ (length str) n))))))
-    (apply #'concatenate 'string 
-           (mapcar #'collect (disperse! n (seq str))))))
-
-
-(defun chunk (n str)
-  (assert (zerop (mod (length str) n)))
-  (let ((size (/ (length str) n)))
-    (loop
-       :for i :below (length str) :by size
-       :collect (subseq str i (+ i size)) )))
-
-(defun descramble (n str)
-  (concatenate 'string
-               (collect 
-                   (apply #'intersperse!
-                          (mapcar #'seq (chunk n str))))))
