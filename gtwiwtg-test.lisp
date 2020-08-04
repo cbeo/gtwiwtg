@@ -96,32 +96,15 @@
                 (range :from 0 :by -5 :to -20 :inclusive t)))
     '(0 -5 -10 -15 -20 -50 -100 -150 -200 0 0 1 2 50 100 150 200))
 
-(is (concatenate 'string (collect (skip! 5 (seq "hellodude"))))
-    "dude")
+(is (collect (intersperse! (times 5) (repeater 'a 'b 'c) (range :by -10)))
+    '(0 A 0 1 B -10 2 C -20 3 A -30 4 B -40))
 
-(is (take 4 (skip! 10 (range)))
-    '(10 11 12 13))
+(is (collect (truncate! 20 (range)))
+    '(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19))
 
-(is (collect (skip-while! #'evenp (seq '(0 2 4 6 9 2 4 6 7 11))))
-    '(9 2 4 6 7 11))
+(is (pick-out '(4 1 1 4 2) (seq "generators"))
+    '(#\r #\e #\e #\r #\n))
 
-(destructuring-bind (a b c d) (nfurcate! 4 (seq "hello"))
-  (is (concatenate 'string
-                   (collect a)
-                   (collect b)
-                   (collect c)
-                   (collect d))
-      "hellohellohellohello"))
-
-(destructuring-bind (a b c d) (nfurcate! 4 (seq "hello"))
-  (is (concatenate 'string
-                   (collect (intersperse! a b c d)))
-      "hhhheeeelllllllloooo"))
-
-(destructuring-bind (a b c d) (disperse! 4 (seq "hhhheeeelllllllloooo"))
-  (is (concatenate 'string
-                   (collect (concat! a b c d)))
-      "hellohellohellohello"))
 
  )
 
