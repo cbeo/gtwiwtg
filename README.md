@@ -1,3 +1,21 @@
+Table Of Contents
+- [GTWIWTG Overview](#gtwiwtg)
+  - [Installation](#installation)
+  - [Motivating Examples](#first-some-action)
+  - [Tutorial](#tutorial)
+    - [Function Taxonomy](#three-kinds-of-function)
+    - [Constructors](#the-breadwinning-constructors)
+    - [Combinators](#the-combination-and-transformation-functions)
+    - [Combinator Error Behavior](#a-word-of-warning)
+    - [Consuming Generators](#the-fundamental-consumer)
+    - [One-Time-Use](#generators-are-consumed-at-most-once)
+    - [Accumulating Consumer](#the-accumulating-consumer)
+    - [More Consumers](#the-remaining-consumers)
+    - [Anaphoric Consumers](#anaphoric-consumer-macros)
+    - [Extending GTWIWTG](#making-new-generators)
+    - [`with-generator`](#the-naughty-consumer)
+  - [Example: Permutations](#the-permutations-example)
+
 # GTWIWTG
 
 *Generators The Way I Want Them Generated*
