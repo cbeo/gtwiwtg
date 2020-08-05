@@ -603,7 +603,7 @@ trying to get it.
 
 ### The Naughty Consumer 
 
-Now that the mysteries that make generators go has been explained in
+Now that the mysteries that make generators go have been explained in
 the previous section, you may be tempted to manually call `next` and
 `has-next-p` on your generators. If you must do this, you should use
 the `with-generator` macro:
@@ -619,10 +619,10 @@ a
 ```
 
 The `with-generator` form will ensure that the generator is properly
-closed. Could be useful with generators backed by input streams that
-need a custom logic that is hard to build using the basic tools. I'm
-not sure if you ever *will* need it, but the library provides it just
-in case.
+closed. It could be useful with generators backed by input streams
+that need a custom logic, or perhaps in some case where you need to
+interleave operations between multiple generators. I'm not sure if you
+ever *will* need it, but the library provides it just in case.
 
 ## The Permutations Example
 
