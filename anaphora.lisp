@@ -23,4 +23,4 @@ Example:
 45
 
 "
-  `(fold (acc ,init) (it ,expr) ,update))
+  `(fold (acc ,init) (it ,generator) ,update))
