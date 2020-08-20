@@ -20,6 +20,8 @@ Table Of Contents
 
 *Generators The Way I Want Them Generated*
 
+(technically not generators, but iterators)
+
 An extensible library for generators. 
 
 The GTWIWTG library is meant to be small, explorable, and understandable.
