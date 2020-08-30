@@ -1,4 +1,18 @@
+
+# GTWIWTG
+
+*Generators The Way I Want Them Generated*
+
+(Technically not generators, but iterators.)
+
+The GTWIWTG library is meant to be small, explorable, and understandable.
+The source code is meant to be legible and straightforward.
+
+Every symbol exported from the `GTWIWTG` package has a useful
+docstring. Many docstrings include examples of use.
+
 Table Of Contents
+
 - [GTWIWTG Overview](#gtwiwtg)
   - [Installation](#installation)
   - [Motivating Examples](#first-some-action)
@@ -15,20 +29,6 @@ Table Of Contents
     - [Extending GTWIWTG](#making-new-generators)
     - [`with-generator`](#the-naughty-consumer)
   - [Example: Permutations](#the-permutations-example)
-
-# GTWIWTG
-
-*Generators The Way I Want Them Generated*
-
-(technically not generators, but iterators)
-
-An extensible library for generators. 
-
-The GTWIWTG library is meant to be small, explorable, and understandable.
-The source code is meant to be legible and straightforward.
-
-Every symbol exported from the `GTWIWTG` package has a useful
-docstring. Many docstrings include examples of use.
 
 ## Installation 
 
