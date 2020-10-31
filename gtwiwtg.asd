@@ -1,8 +1,8 @@
 ;;;; gtwiwtg.asd
 
 (asdf:defsystem #:gtwiwtg
-  :description "Generators and consumers."
-  :author "Colin Okay <cbeok@protonmail.com>"
+  :description "Lazy-ish iterators"
+  :author "Colin Okay <okay@toyful.space>"
   :license  "GPLv3"
   :version "0.1.1"
   :serial t
