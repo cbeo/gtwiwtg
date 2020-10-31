@@ -321,24 +321,6 @@ The last generated value of the returned generator will be NIL.
   (from-input-stream (open file :element-type '(unsigned-byte 8))
                      (lambda (stream) (read-byte stream nil nil))))
 
-;;; Some utilities
-
-(defun make-queue ()
-  (cons nil nil))
-
-(defun enqueue (x q) 
-  (push x (car q)))
-
-(defun dequeue (q)
-  (when (and (car q) (null (cdr q)))
-    (setf (cdr q) (reverse (car q))
-          (car q) nil))
-  (when (cdr q) (pop (cdr q))))
-             
-(defun queue-empty-p (q)
-  (and (null (car q))
-       (null (cdr q))))
-
 ;;; Some assertion tests
 
 (defun all-different (things)
