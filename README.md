@@ -32,8 +32,6 @@ Table Of Contents
 
 ## Installation 
 
-    git clone https://github.com/cbeo/gtwiwtg /path/to/quicklisp/local-projects/
-
 ``` lisp
 
 (ql:quickload :gtwiwtg)
