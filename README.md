@@ -713,10 +713,8 @@ And here's a quick demo of its use:
 
 ``` lisp
 
-;; the map! is to turn vectors back into strings for ease of viewing
-(for perm (map! (lambda (x) (concatenate 'string x)) 
-                (perms "abcd"))
-  (print perm))
+(for perm (perms "abcd") 
+  (print (concatenate 'string perm)))
 
 "abcd" 
 "bacd" 
