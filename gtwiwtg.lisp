@@ -363,6 +363,30 @@ Error Conditions:
      (lambda ()
        (dolist (g all-gens) (stop g))))))
 
+(defclass filtered-generator (generator!)
+  ((on-deck :initform (list))
+   (source-generator :initform (error "filtered generator must have a source")
+                     :initarg :source)
+   (predicate :initform (error "filtered generator must have a predicate")
+              :initarg :predicate)))
+
+(defmethod next ((gen filtered-generator))
+  (pop (slot-value gen 'on-deck)))
+
+(defmethod has-next-p ((gen filtered-generator))
+  (with-slots (source-generator predicate on-deck) gen
+    (or on-deck 
+        (loop :while (has-next-p source-generator)
+              :for candidate = (next source-generator)
+              :when (funcall predicate candidate)
+                :do (push candidate on-deck)
+                    (return t)
+              :finally (return nil)))))
+
+(defmethod stop :after ((gen filtered-generator))
+  (stop (slot-value gen 'source-generator)))
+
+
 (defun filter! (pred gen)
   "Creats a generator that generates the values of GEN for which PRED is non null.
 
@@ -370,24 +394,7 @@ Error Condition:
  - If GEN has been used elsewhere, an error will be signalled.
 "
   (sully-when-clean (list gen))
-  (let (on-deck)
-    (from-thunk-until
-     (lambda () on-deck) ; consumers always call has-next-p before next
-
-     :until
-     (lambda ()
-       (loop
-          :while (has-next-p gen)
-          :for candidate = (next gen)
-          :when (funcall pred candidate)
-          :do (progn
-                (setf on-deck candidate)
-                (return nil))   ; Don't stop generating, we found one
-          :finally (return t))) ; Stop generating, we can't find one.
-
-     :clean-up
-     (lambda ()
-       (stop gen)))))
+  (make-instance 'filtered-generator :predicate pred :source gen))
 
 
 (defun inflate! (fn gen &key extra-cleanup)
