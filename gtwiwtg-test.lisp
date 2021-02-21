@@ -106,6 +106,15 @@
     '(#\r #\e #\e #\r #\n))
 
 
+ (let ((res (make-resumable!
+             (concat! (seq "hello")
+                      (indexed! (filter! 'alpha-char-p (seq "a b c 1 2 3 easy as")))))))
+   (take 1 res)
+   (setf res (resume! res))
+   (is '(#\e #\l #\l #\o (0 #\a) (1 #\b) (2 #\c) (3 #\e) (4 #\a) (5 #\s) (6 #\y)
+         (7 #\a) (8 #\s)) 
+       (collect res)))
+
  )
 
 

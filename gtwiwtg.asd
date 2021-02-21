@@ -4,7 +4,7 @@
   :description "Lazy-ish iterators"
   :author "Colin Okay <okay@toyful.space>"
   :license  "GPLv3"
-  :version "0.1.2"
+  :version "0.2.0"
   :serial t
   :components ((:file "package")
                (:file "gtwiwtg")

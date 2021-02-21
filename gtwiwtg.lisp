@@ -148,6 +148,15 @@
   (stop (slot-value gen 'source-generator)))
 
 
+(a-generator-class resumable-generator! ()
+                   (wrapped (error "Resumable generators must wrap another generator")))
+
+(defmethod next ((gen resumable-generator!))
+  (next (slot-value gen 'wrapped)))
+
+(defmethod has-next-p ((gen resumable-generator!))
+  (gtwiwtg::has-next-p (slot-value gen 'wrapped)))
+
 ;;; CONSTRUCTORS
 
 (defun range (&key (from 0) to (by 1) inclusive)
@@ -359,6 +368,31 @@ The last generated value of the returned generator will be NIL.
   (dolist (g gens) (make-dirty g)))
 
 ;;; MODIFIERS and COMBINATORS
+
+(defun make-resumable! (gen)
+  "Makes a generator resumable. 
+
+> (defvar *foobar* (make-resumable! (range)))
+*FOOBAR*
+
+> (take 10 *foobar*)
+(0 1 2 3 4 5 6 7 8 9)
+
+> (setf *foobar* (resume! *foobar*))
+
+> (take 10 *foobar*)
+(10 11 12 13 14 15 16 17 18 19)
+"
+  (sully-when-clean (list gen))
+  (make-instance 'resumable-generator! :wrapped gen))
+
+(defun can-be-resumed-p (gen)
+  (and  (typep gen 'resumable-generator!)
+        (stopped-p gen)))
+
+(defun resume! (resumable)
+  (assert (can-be-resumed-p resumable))
+  (make-instance 'resumable-generator! :wrapped (slot-value resumable 'wrapped)))
 
 (defun map! (map-fn gen &rest gens)
   "Maps a function over a number of generators, returning a generator

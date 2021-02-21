@@ -15,6 +15,8 @@
            #:file-lines
            #:file-chars
            #:file-bytes
+           #:make-resumable!
+           #:resume!
            #:map!
            #:filter!
            #:inflate!
