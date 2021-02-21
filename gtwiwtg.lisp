@@ -126,19 +126,15 @@
 (defmethod stop :after ((g stream-backed-generator!))
   (close (slot-value g 'stream)))         
 
+(a-generator-class filtered-generator! ()
+                   (on-deck (list))
+                   (source-generator (error "filtered generator must have a source"))
+                   (predicate (error "filtered generator must have a predicate")))
 
-
-(defclass filtered-generator (generator!)
-  ((on-deck :initform (list))
-   (source-generator :initform (error "filtered generator must have a source")
-                     :initarg :source)
-   (predicate :initform (error "filtered generator must have a predicate")
-              :initarg :predicate)))
-
-(defmethod next ((gen filtered-generator))
+(defmethod next ((gen filtered-generator!))
   (pop (slot-value gen 'on-deck)))
 
-(defmethod has-next-p ((gen filtered-generator))
+(defmethod has-next-p ((gen filtered-generator!))
   (with-slots (source-generator predicate on-deck) gen
     (or on-deck 
         (loop :while (has-next-p source-generator)
@@ -148,7 +144,7 @@
                     (return t)
               :finally (return nil)))))
 
-(defmethod stop :after ((gen filtered-generator))
+(defmethod stop :after ((gen filtered-generator!))
   (stop (slot-value gen 'source-generator)))
 
 
@@ -398,7 +394,7 @@ Error Condition:
  - If GEN has been used elsewhere, an error will be signalled.
 "
   (sully-when-clean (list gen))
-  (make-instance 'filtered-generator :predicate pred :source gen))
+  (make-instance 'filtered-generator! :predicate pred :source-generator gen))
 
 
 (defun inflate! (fn gen &key extra-cleanup)
