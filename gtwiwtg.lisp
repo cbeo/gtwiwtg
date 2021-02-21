@@ -149,6 +149,7 @@
 
 
 (a-generator-class resumable-generator! ()
+                   already-resumed-p
                    (wrapped (error "Resumable generators must wrap another generator")))
 
 (defmethod next ((gen resumable-generator!))
@@ -388,10 +389,34 @@ The last generated value of the returned generator will be NIL.
 
 (defun can-be-resumed-p (gen)
   (and  (typep gen 'resumable-generator!)
+        (not (slot-value gen 'already-resumed-p))
         (stopped-p gen)))
 
 (defun resume! (resumable)
+  "Resumes a resumable generator.  Creates a new generator from
+RESUMABLE.  
+
+A particular resumable generator instance can only be resumed
+once. Here is how you would resume a generator several times:
+
+> (defvar *foobar* (make-resumable! (range)))
+*FOOBAR*
+
+> (take 10 *foobar*)
+(0 1 2 3 4 5 6 7 8 9)
+
+> (defvar *new-foobar* (resume! *foobar*))
+
+> (defvar *wont-work* (resume! *foobar*)) ;; THROWS AN ERROR
+
+> (take 10 *new-foobar*)
+(10 11 12 13 14 15 16 17 18 19)
+
+;; but *new-foobar* can be resumed
+> (setf *new-foobar* (resume! *new-foobar*))
+"
   (assert (can-be-resumed-p resumable))
+  (setf (slot-value resumable 'already-resumed-p) t)
   (make-instance 'resumable-generator! :wrapped (slot-value resumable 'wrapped)))
 
 (defun map! (map-fn gen &rest gens)
