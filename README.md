@@ -23,6 +23,7 @@ Table Of Contents
     - [Combinator Error Behavior](#a-word-of-warning)
     - [Consuming Generators](#the-fundamental-consumer)
     - [One-Time-Use](#generators-are-consumed-at-most-once)
+    - [Resumable Generators](#but-resumable-generators-are-possible)
     - [Accumulating Consumer](#the-accumulating-consumer)
     - [More Consumers](#the-remaining-consumers)
     - [Anaphoric Consumers](#anaphoric-consumer-macros)
