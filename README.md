@@ -423,7 +423,33 @@ letting you not have to think about how generators work.
 
 You need only remember the rule: Generators Are Consumed At Most Once.
 
+### But Resumable Generators are Possible
 
+An exception to the above comes in the form of *resumable* generators.
+To make a resumable generator call `(make-resumable! <gen>)` on a
+generator.  Once you have passed a resumable generator to a consuming
+form you can still get some values out of it by passing it to
+`resume!`, which will create a brand new generator that picks up where
+the old one left off.
+
+E.g.
+
+``` lisp
+
+> (defvar *resumable-evens* 
+           (make-resumable! (filter! 'evenp (range :from 1))))
+*RESUMABLE-EVENS*
+
+> (take 10 *resumable-evens* )
+(2 4 6 8 10 12 14 16 18 20)
+
+> (setf *resumable-evens* (resume! *resumable-evens*))
+#<RESUMABLE-GENERATOR! {10049A7F63}>
+
+> (take 10 *resumable-evens*)
+(22 24 26 28 30 32 34 36 38 40)
+
+```
 
 ### The Accumulating Consumer
 
