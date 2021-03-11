@@ -82,6 +82,28 @@ example apears at the end of the document, following the tutorial.
 
 ```
 
+
+### Cartesian Products 
+
+``` lisp
+
+> (defun cartesian-product (list &rest lists) 
+    "A generator for the Cartesian product of a some lists"
+    (if (null lists)
+        (map! 'list (seq list))
+        (inflate! (lambda (elem)
+                    (map! (lambda (tail) (cons elem tail))
+                          (apply 'cartesian-product lists)))
+                  (seq list))))
+
+> (collect (cartesian-product '(1 2 3) '(a b c) '("foo" "bar")))
+((1 A "foo") (1 A "bar") (1 B "foo") (1 B "bar") (1 C "foo") (1 C "bar")
+ (2 A "foo") (2 A "bar") (2 B "foo") (2 B "bar") (2 C "foo") (2 C "bar")
+ (3 A "foo") (3 A "bar") (3 B "foo") (3 B "bar") (3 C "foo") (3 C "bar"))
+
+
+```
+
 ### A Kind Of Grep
 
 ``` lisp
